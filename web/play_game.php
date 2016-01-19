@@ -112,7 +112,7 @@ body {
 }
 
 #results a{
-	color: #3498DB;
+	color: #3468DB;
 	font-size: 20;
 	-webkit-transition: .5s ease-in-out;
     -moz-transition: .5s ease-in-out;
