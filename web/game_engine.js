@@ -148,14 +148,14 @@ function show_results(winning_player, draw_game){
 		}
 
 		document.getElementById("results").innerHTML =  
-		'<h3><b>Winner is <u>'+ winner +'</u>!</b></h3>' + document.getElementById("results").innerHTML;
+		'<h3><b>'+ winner +' wins!</b></h3>' + document.getElementById("results").innerHTML;
 
 		document.getElementById("results").style.opacity = 1;
 	}
 
 	else{
 		document.getElementById("results").innerHTML =  
-		"<h3><b>It is a draw!</u></b></h3>" + document.getElementById("results").innerHTML;
+		"<h3><b>It is a draw!</b></h3>" + document.getElementById("results").innerHTML;
 
 		document.getElementById("results").style.opacity = 1;
 	}
@@ -233,7 +233,7 @@ function win_checker(x, y, ball_color)
 			youreWinner = true
 		} 
 
-		else if ((sum2 >= 4) && (youShallNotPass2 == 0)) 
+		if ((sum2 >= 4) && (youShallNotPass2 == 0)) 
 		{
 			type_of_impact = "vertical";
 			lightTheBalls(x, y, outer_ctr, type_of_impact, ball_color);
@@ -241,7 +241,7 @@ function win_checker(x, y, ball_color)
 			youreWinner = true
 		}
 
-		else if ((sum3 >= 4) && (youShallNotPass3 == 0)) 
+		if ((sum3 >= 4) && (youShallNotPass3 == 0)) 
 		{
 			type_of_impact = "diagonal-left-to-right";//L to R, from top
 			lightTheBalls(x, y, outer_ctr, type_of_impact, ball_color);
@@ -249,7 +249,7 @@ function win_checker(x, y, ball_color)
 			youreWinner = true
 		} 
 
-		else if ((sum4 >= 4) && (youShallNotPass4 == 0)) 
+		if ((sum4 >= 4) && (youShallNotPass4 == 0)) 
 		{
 			type_of_impact = "diagonal-right-to-left";//R to L, from top
 			lightTheBalls(x, y, outer_ctr, type_of_impact, ball_color);
@@ -267,7 +267,6 @@ function win_checker(x, y, ball_color)
 
 function lightTheBalls(x, y, degree, type_of_impact, ball_color)
 {
-
 	var dx;
 	var dy;
 	var current_x = x;

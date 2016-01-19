@@ -14,7 +14,7 @@ body {
 	border-style: solid;
 	border-color: #fffc00;
     border-width: 50px;
-    outline: 10px dotted #F2DDDE;
+    outline: 5px dashed #F2DDDE;
 }
 
 .column{
@@ -38,33 +38,44 @@ body {
 	background-color:#ed303c;
 	color:#fff;
 	padding: 6px;
-	outline: 1px solid #bbb;
-	font-family: Arial;
+	outline: 1px solid #eee;
+	font-family: Verdana;
 }
 
 
 #results{
 	position: fixed;
     top: 50%;
-    left: 90px;
+    left: 80px;
     -webkit-transform: translate(0%, -50%);
     transform: translate(0%, -50%);
-    height: 140px;
-	width:150px;
+    height: 175px;
+	width:175px;
 	text-align: center;
 	background-color:#F2DDDE;
 	padding: 20px;
-	outline: 5px dotted #F2DDDE;
-	font-family: Arial;
+	outline: 1px solid #aaa;
 	-webkit-transition: .5s ease-in-out;
     -moz-transition: .5s ease-in-out;
     -o-transition: .5s ease-in-out;
     transition: .5s ease-in-out;
+
+    -moz-box-shadow: 5px 5px 2px #888;
+	-webkit-box-shadow: 5px 5px 2px #888;
+	box-shadow: 5px 5px 2px #888;
+
 	opacity: 0;
 }
 
 #results:hover {
     background: #ddd;
+}
+
+#results h3{
+	color: #111;
+	font-size: 24px;
+    font-family: Gill Sans, Verdana;
+    text-shadow: 2px 2px 2px #eee;
 }
 
 #results a{
@@ -174,19 +185,17 @@ body {
 	right: 0px;
 	bottom: 0px;
 	background-color:#F2DDDE;
+	color: #222;
 	padding: 10px;
-	outline: 5px dotted #F2DDDE;
+	outline: 2px solid #333;
 	font-family: Arial;
+	-webkit-transition: .2s ease-in-out;
+    -moz-transition: .2s ease-in-out;
+    -o-transition: .2s ease-in-out;
+    transition: .2s ease-in-out;
 }
 
-#nametag span{
-	-webkit-transition: .1s ease-in-out;
-    -moz-transition: .1s ease-in-out;
-    -o-transition: .1s ease-in-out;
-    transition: .1s ease-in-out;
-}
-
-#nametag span:hover{
+#nametag:hover{
 	background-color:#ed303c;
-	color:#fff;
+	color:#eee;
 }
