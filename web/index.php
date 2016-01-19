@@ -146,6 +146,8 @@ body {
 				{
 					hasWon=true;
 					show_results(current_player, false);
+					var audio = new Audio('Ta Da-SoundBible.com-1884170640.mp3');
+					audio.play();
 				}
 
 				//Draw Case (All columns have been filled)
