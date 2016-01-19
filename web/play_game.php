@@ -316,10 +316,11 @@ body {
 		}; 
 
 		/*Check the whole board for cases:
-		Magsisimula sa x and y, tapos, sa inner loop, may checking for horizontal (pa-left), vertical (pa-down), diagonals (R-L, L-R). 
-		Kapag di nakakita, bababa from x, bababa from y , bababa from diagonals. Gagawin to 4 times (outer loop).
-		4 times... kasi kailangan i-handle yung worst case na pa-horizontal kapag galing sa column 7. 
-		Kapag lumagpas sa ibababa or sa kaliwa (will happen in the inner loops of non-worst cases), makikita agad as outside. */
+		Magsisimula sa x and y, tapos, sa inner loop, may checking for horizontal (pakanan), vertical (pababa), diagonals (L-R, R-L; from top). 
+		Kapag di nakakita: kakaliwa from x, tataas from y , tataas (and <kakaliwa OR kakanan>) from diagonals ng 1 step. Gagawin to 4 times (outer loop).
+		4 times... kasi kailangan i-handle yung worst case na pa-horizontal kapag galing sa column 7.
+		So basically, ichecheck ng inner loop yung 4 paabante, tapos pag di nakakita, i-aatras ng outer loop yung checking ng 1.
+		Kapag lumagpas sa grid (will happen in the inner loops of non-worst cases), or nakatagpo ng other ball color, mag-fafalse yung inner loop. */
 
 		for (k=0;k<=3;k++)
 		{
@@ -334,15 +335,12 @@ body {
 
 			for(j=0;j<=3;j++)
 			{
-				if(ball_color == red){
-					//alert((4*k)+j)
-				}
 
 				//Check kung "You're" Winner
-				if (get(x-k+j,y) == ball_color) {sum1++};//I-check ang pakaliwa...
-				if (get(x,y-k+j) == ball_color) {sum2++};//I-check ang pababa...
-				if (get(x-k+j,y-k+j) == ball_color) {sum3++};//I-check ang pa-diagonal (right to left)
-				if (get(x+k-j,y-k+j) == ball_color) {sum4++};//I-check ang pa-diagonal (left to right)
+				if (get(x-k+j,y) == ball_color) {sum1++};//I-check ang pa-horizontal...(pakanan)
+				if (get(x,y-k+j) == ball_color) {sum2++};//I-check ang pa-vertical...(pababa)
+				if (get(x-k+j,y-k+j) == ball_color) {sum3++};//I-check ang pa-diagonal... (left to right, from top)
+				if (get(x+k-j,y-k+j) == ball_color) {sum4++};//I-check ang pa-diagonal... (right to left, from top)
 
 
 				//Same checking pero for the other ball. Kapag naka-encounter ng at least 1, "You shall not pass" - Gandalf
@@ -360,13 +358,109 @@ body {
 			}
 
 
-			if ((sum1 >= 4) && (youShallNotPass1 == 0)) {youreWinner = true} else
-			if ((sum2 >= 4) && (youShallNotPass2 == 0)) {youreWinner = true} else
-			if ((sum3 >= 4) && (youShallNotPass3 == 0)) {youreWinner = true} else
-			if ((sum4 >= 4) && (youShallNotPass4 == 0)) {youreWinner = true};
+			if ((sum1 >= 4) && (youShallNotPass1 == 0)) 
+			{
+				type_of_impact = "horizontal";
+				lightTheBalls(x, y, k, type_of_impact, ball_color);
+
+				youreWinner = true
+			} 
+
+			else if ((sum2 >= 4) && (youShallNotPass2 == 0)) 
+			{
+				type_of_impact = "vertical";
+				lightTheBalls(x, y, k, type_of_impact, ball_color);
+
+				youreWinner = true
+			}
+
+			else if ((sum3 >= 4) && (youShallNotPass3 == 0)) 
+			{
+				type_of_impact = "diagonal-left-to-right";
+				lightTheBalls(x, y, k, type_of_impact, ball_color);
+
+				youreWinner = true
+			} 
+
+			else if ((sum4 >= 4) && (youShallNotPass4 == 0)) 
+			{
+				type_of_impact = "diagonal-right-to-left";
+				lightTheBalls(x, y, k, type_of_impact, ball_color);
+
+				youreWinner = true
+			};
 
 		}
 		return youreWinner;
+	}
+
+	
+
+	function lightTheBalls(x, y, degree, type_of_impact, ball_color)
+	{
+
+		var dx;
+		var dy;
+		var current_x = x;
+		var current_y = y;
+
+		
+		if(type_of_impact=="horizontal")
+		{
+			dx = 1;
+			dy = 0;
+			current_x = current_x - degree;
+		}
+		
+		else if(type_of_impact == "vertical")
+		{
+			dx = 0;
+			dy = 1;
+			current_y = current_y - degree;
+		}
+
+		else if(type_of_impact == "diagonal-left-to-right")
+		{
+			dx = 1;
+			dy = 1;
+			current_x = current_x - degree;
+			current_y = current_y - degree;
+		}
+
+		else if(type_of_impact == "diagonal-right-to-left")
+		{
+			dx = -1;
+			dy = 1;
+			current_x = current_x + degree;
+			current_y = current_y - degree;
+		}
+
+
+
+
+		for(ctr=0; ctr<=3; ctr++){
+
+			if (ball_color == red) 
+				document.getElementById("PlayPanel").innerHTML = document.getElementById("PlayPanel").innerHTML + 
+				'<div id="ball' + '" style="position:absolute; top:'+((current_y-1)*60+68)+'px; left:'+(current_x*60+3)+
+				'px;"><img src="images/RED_WINNER.gif" class="circle"> </div>';
+
+				
+			
+			if (ball_color == black) 
+				document.getElementById("PlayPanel").innerHTML = document.getElementById("PlayPanel").innerHTML + 
+				'<div id="ball' + '" style="position:absolute; top:'+((current_y-1)*60+68)+'px; left:'+(current_x*60+3)+
+				'px;"><img src="images/BLACK_WINNER.gif" class="circle"> </div>';
+
+			current_x += dx;
+			current_y += dy;
+
+		}
+
+
+
+
+
 	}
 
 

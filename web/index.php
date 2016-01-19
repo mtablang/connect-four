@@ -49,7 +49,17 @@ body {
 	font-family: Arial;
 }
 
+#nametag span{
+	-webkit-transition: .1s ease-in-out;
+    -moz-transition: .1s ease-in-out;
+    -o-transition: .1s ease-in-out;
+    transition: .1s ease-in-out;
+}
 
+#nametag span:hover{
+	background-color:#ed303c;
+	color:#fff;
+}
 
 
 
@@ -73,8 +83,8 @@ body {
 
 .action-button:active
 {
-	transform: translate(0px,5px);
-  	-webkit-transform: translate(0px,5px);
+	transform: translate(0px,8px);
+  	-webkit-transform: translate(0px,8px);
 	
 }
 
@@ -149,7 +159,7 @@ body {
 
 
 	<div id="nametag">
-		<b><u>Connect Four</u></b> by <br> <b><u>Martin Leandro Tablang</u></b><br> (c) <b>2016</b>
+		<b><u>Connect Four</u></b> by <br> <b><u><span>Martin Leandro Tablang</span></u></b><br> (c) <b>2016</b>
 	</div>
 
 
