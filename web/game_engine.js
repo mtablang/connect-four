@@ -22,6 +22,7 @@ var current_player = first_move;
 
 var ballNumber = 0;
 var hasWon = false;
+var hasBallDropped = true;
 
 
 
@@ -29,7 +30,7 @@ var hasWon = false;
 
 function drop_ball(column_number)
 {
-	if(!hasWon){
+	if((!hasWon)&&(hasBallDropped)){
 		
 
 		//Case: Column Full
@@ -43,7 +44,8 @@ function drop_ball(column_number)
 		{
 			board_holes[column_number][heightCounter[column_number]] = current_player;
 			heightCounter[column_number]--;
-			put(column_number,current_player);
+			hasBallDropped = false;
+			put(column_number, current_player, 0, true);
 			var audio = new Audio('sounds/Blop-Mark_DiAngelo-79054334.mp3');
 			audio.play();
 			
@@ -98,23 +100,39 @@ function drop_ball(column_number)
 
 
 
-function put(column_number,ball_color)
+function put(column_number,ball_color, height, first_recurse)
 {
-	//To do: PUT "hulog" ANIMATION HERE
-	if (ball_color == red) 
-		document.getElementById("PlayPanel").innerHTML = document.getElementById("PlayPanel").innerHTML + 
-		'<div id="ball' + ballNumber + '" style="position:absolute; top:'+(heightCounter[column_number]*60+68)+'px; left:'+(column_number*60+3)+
-		'px;"><img src="images/red-circle.png" class="circle"> </div>';
 
-		
+	if(first_recurse){
+		if (ball_color == red) 
+			document.getElementById("PlayPanel").innerHTML = document.getElementById("PlayPanel").innerHTML + 
+			'<div id="ball' + ballNumber + '" style="position:absolute; top:'+(height)+'px; left:'+(column_number*60+3)+
+			'px;"><img src="images/red-circle.png" class="circle"> </div>';
 
-	if (ball_color == black) 
-		document.getElementById("PlayPanel").innerHTML = document.getElementById("PlayPanel").innerHTML + 
-		'<div id="ball' + ballNumber + '"style="position:absolute; top:'+(heightCounter[column_number]*60+68)+'px; left:'+(column_number*60+3)+
-		'px;"><img src="images/black-circle.png" class="circle"> </div>';
+			
+
+		if (ball_color == black) 
+			document.getElementById("PlayPanel").innerHTML = document.getElementById("PlayPanel").innerHTML + 
+			'<div id="ball' + ballNumber + '"style="position:absolute; top:'+(height)+'px; left:'+(column_number*60+3)+
+			'px;"><img src="images/black-circle.png" class="circle"> </div>';
+	}
+
+
+	falling_ball = document.getElementById("ball"+ballNumber);
+
+	if(height > (heightCounter[column_number]*60+68)){
+		falling_ball.style.top = heightCounter[column_number]*60+68;
+		hasBallDropped = true;
+		ballNumber++;
+	}
+	else{
+		falling_ball.style.top = height + 'px';
+		setTimeout(function(){put(column_number, ball_color, height+5, false)}, 1);
+	}
 
 	
-	ballNumber++;
+	
+	
 }
 
 
