@@ -1,6 +1,6 @@
 
 
-board_holes 	 = new Array(0,0,0,0,0,0,0);
+board_holes    = new Array(0,0,0,0,0,0,0);
 board_holes[0] = new Array(0,0,0,0,0,0);//Column 0
 board_holes[1] = new Array(0,0,0,0,0,0);//Column 1
 board_holes[2] = new Array(0,0,0,0,0,0);//Column 2
@@ -41,11 +41,13 @@ function drop_ball(column_number)
 
 
 		else
-		{
+		{			
+			hasBallDropped = false;
+			put(column_number, heightCounter[column_number], 0, current_player, true);
+			
 			board_holes[column_number][heightCounter[column_number]] = current_player;
 			heightCounter[column_number]--;
-			hasBallDropped = false;
-			put(column_number, current_player, 0, true);
+
 			var audio = new Audio('sounds/Blop-Mark_DiAngelo-79054334.mp3');
 			audio.play();
 			
@@ -100,34 +102,34 @@ function drop_ball(column_number)
 
 
 
-function put(column_number,ball_color, height, first_recurse)
+function put(column_number, goal_height, current_height, ball_color, first_recurse)
 {
 
 	if(first_recurse){
 		if (ball_color == red) 
 			document.getElementById("PlayPanel").innerHTML = document.getElementById("PlayPanel").innerHTML + 
-			'<div id="ball' + ballNumber + '" style="position:absolute; top:'+(height)+'px; left:'+(column_number*60+3)+
+			'<div id="ball' + ballNumber + '" style="position:absolute; top:'+(current_height)+'px; left:'+((column_number*60) +3)+
 			'px;"><img src="images/red-circle.png" class="circle"> </div>';
 
 			
 
 		if (ball_color == black) 
 			document.getElementById("PlayPanel").innerHTML = document.getElementById("PlayPanel").innerHTML + 
-			'<div id="ball' + ballNumber + '"style="position:absolute; top:'+(height)+'px; left:'+(column_number*60+3)+
+			'<div id="ball' + ballNumber + '"style="position:absolute; top:'+(current_height)+'px; left:'+((column_number*60) +3)+
 			'px;"><img src="images/black-circle.png" class="circle"> </div>';
 	}
 
 
 	falling_ball = document.getElementById("ball"+ballNumber);
 
-	if(height > (heightCounter[column_number]*60+68)){
-		falling_ball.style.top = heightCounter[column_number]*60+68;
+	if(current_height > ((goal_height*60) +8)){
+		falling_ball.style.top = (goal_height*60) +8;
 		hasBallDropped = true;
 		ballNumber++;
 	}
 	else{
-		falling_ball.style.top = height + 'px';
-		setTimeout(function(){put(column_number, ball_color, height+5, false)}, 1);
+		falling_ball.style.top = current_height + 'px';
+		setTimeout(function(){put(column_number, goal_height, current_height+5, ball_color, false)}, 1);
 	}
 
 	
@@ -143,11 +145,11 @@ function get(column_number, row_number)
 {
 	if ((column_number < 0) || (column_number > 6) || (row_number < 0) || (row_number > 5)) 
 	{
-		return outside
+		return outside;
 	}
 	else 
 	{
-		return (board_holes[column_number][row_number])
+		return (board_holes[column_number][row_number]);
 	}
 }
 
@@ -328,14 +330,14 @@ function lightTheBalls(x, y, degree, type_of_impact, ball_color)
 
 		if (ball_color == red) 
 			document.getElementById("PlayPanel").innerHTML = document.getElementById("PlayPanel").innerHTML + 
-			'<div id="ball' + '" style="position:absolute; top:'+((current_y-1)*60+68)+'px; left:'+(current_x*60+3)+
+			'<div id="ball' + '" style="position:absolute; top:'+((current_y*60) +8)+'px; left:'+((current_x*60) +3)+
 			'px;"><img src="images/RED_WINNER.gif" class="circle"> </div>';
 
 			
 		
 		if (ball_color == black) 
 			document.getElementById("PlayPanel").innerHTML = document.getElementById("PlayPanel").innerHTML + 
-			'<div id="ball' + '" style="position:absolute; top:'+((current_y-1)*60+68)+'px; left:'+(current_x*60+3)+
+			'<div id="ball' + '" style="position:absolute; top:'+((current_y*60) +8)+'px; left:'+((current_x*60) +3)+
 			'px;"><img src="images/BLACK_WINNER.gif" class="circle"> </div>';
 
 		current_x += dx;

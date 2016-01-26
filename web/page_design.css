@@ -12,7 +12,7 @@ body {
 	height: 370px;
 	width: 420px;
 	border-style: solid;
-	border-color: #fffc00;
+	border-color: #fffc00;	
     border-width: 50px;
     outline: 5px dashed #F2DDDE;
 }
@@ -54,21 +54,21 @@ body {
 	text-align: center;
 	background-color:#F2DDDE;
 	padding: 20px;
-	outline: 1px solid #aaa;
+	
+	
+	border-style: solid;
+	border-color: #333;	
+    border-width: 3px;
 	-webkit-transition: .5s ease-in-out;
     -moz-transition: .5s ease-in-out;
     -o-transition: .5s ease-in-out;
     transition: .5s ease-in-out;
 
-    -moz-box-shadow: 5px 5px 2px #888;
-	-webkit-box-shadow: 5px 5px 2px #888;
-	box-shadow: 5px 5px 2px #888;
-
 	opacity: 0;
 }
 
 #results:hover {
-    background: #ddd;
+    background: #eee;
 }
 
 #results h3{
@@ -95,6 +95,7 @@ body {
 #results a:hover{
 	color: #ed303c;
 }
+
 
 
 
@@ -193,6 +194,9 @@ body {
     -moz-transition: .2s ease-in-out;
     -o-transition: .2s ease-in-out;
     transition: .2s ease-in-out;
+
+
+
 }
 
 #nametag:hover{
