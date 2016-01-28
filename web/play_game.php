@@ -11,6 +11,11 @@
 	echo " var player2name = (\"$player2name\");\n";
 	echo "</script>\n\n";
 
+	$game_type = $_GET['game_type']; 
+	echo "<script type=\"text/javascript\">\n"; 
+	echo " var game_type = (\"$game_type\");\n";
+	echo "</script>\n\n";
+
 
 ?>
 
@@ -61,13 +66,13 @@
 
 
 	<div id="gameboard">		
-		<img src="images/column.png" onclick="drop_ball(0)" class="column"> 
-		<img src="images/column.png" onclick="drop_ball(1)" class="column"> 
-		<img src="images/column.png" onclick="drop_ball(2)" class="column"> 
-		<img src="images/column.png" onclick="drop_ball(3)" class="column"> 
-		<img src="images/column.png" onclick="drop_ball(4)" class="column"> 
-		<img src="images/column.png" onclick="drop_ball(5)" class="column"> 
-		<img src="images/column.png" onclick="drop_ball(6)" class="column">
+		<img src="images/column.png" onclick="drop_from_human(0)" class="column"> 
+		<img src="images/column.png" onclick="drop_from_human(1)" class="column"> 
+		<img src="images/column.png" onclick="drop_from_human(2)" class="column"> 
+		<img src="images/column.png" onclick="drop_from_human(3)" class="column"> 
+		<img src="images/column.png" onclick="drop_from_human(4)" class="column"> 
+		<img src="images/column.png" onclick="drop_from_human(5)" class="column"> 
+		<img src="images/column.png" onclick="drop_from_human(6)" class="column">
 		
 		<div id="PlayPanel"></div>
 	</div>
@@ -92,6 +97,15 @@
 
 <script>
 	document.getElementById("whose_turn").innerHTML = '<b><u>' + player1name + '\'s</u></b> Turn';
+		
+	if(first_move==black){
+		document.getElementById("whose_turn").style.backgroundColor = "#000";
+	}
+	else if(first_move == red){
+		document.getElementById("whose_turn").style.backgroundColor = "#ed303c";
+	}
+
+
 </script>
 
 
