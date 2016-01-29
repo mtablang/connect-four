@@ -15,16 +15,16 @@ heightCounter =  new Array(5,5,5,5,5,5,5);
 //Ball Type Constants
 var red = 1;
 var black = -1;
-var outside = 0;
+var outside = 69;
 
-var first_move = red;
-var second_move = -(first_move);
-var current_player = first_move;
+var first_player = red;
+var second_player = -(first_player);
+var current_player = first_player;
 var current_player_name = player1name;
 
 var globalBallNumber = 0;
 var game_over = false;
-var hasBallDropped = true;
+var hasBallDropped = true;	
 
 
 
@@ -100,10 +100,79 @@ function best_column_heuristic(){
 	chance[5] = Math.random();
 	chance[6] = Math.random();
 
-	var best_column = -1;
-	var greatest_chance = -1;
+	var best_column = 0;
+	var greatest_chance = -10000;
+
+	for(i=0;i<=6;i++){
+
+		//CASES 1-4: Connect-4 Cases
+
+		//CASE 1:
+		//Connect-4 for AI (Winning column for AI).
+		if(win_checker(i, heightCounter[i], second_player, 3))
+		{		
+			chance[i] += 500;
+		}
+	
+		//CASE 2:
+		//Connect-4 for Human (Prevent an immediate human win).
+		if(win_checker(i, heightCounter[i], first_player, 3))
+		{		
+			chance[i] += 250;
+		}
+
+		//CASE 3:
+		//Connect-4 for Human at next turn (Human can win next turn if AI chooses this column -- prevent it).
+		if(win_checker(i, heightCounter[i]-1, first_player, 3))
+		{		
+			chance[i] -= 150;
+		}
+
+		//CASE 4:
+		//Connect-4 for AI at next turn (Human can prevent it right away so avoid it as much as possible).
+		if(win_checker(i, heightCounter[i]-1, second_player, 3))
+		{		
+			chance[i] -= 50;
+		}
+
+
+
+		//CASES 5-8: Connect-3/4 Cases
+
+		//CASE 5:
+		//Connect-3/4 for AI (This is wanted).
+		if(win_checker(i, heightCounter[i], second_player, 2))
+		{		
+			chance[i] += 50;
+		}
+
+		//CASE 6:
+		//Connect-3/4 for human (Avoid a human 3/4-ball-sequence).
+		if(win_checker(i, heightCounter[i], first_player, 2))
+		{		
+			chance[i] += 60;
+		}
+
+		//CASE 7:
+		//Connect-3/4 for human at next turn (Should be stopped).
+		if(win_checker(i, heightCounter[i]-1, first_player, 2))
+		{		
+			chance[i] += 20;
+		}
+
+		//CASE 8:
+		//Connect-3/4 for AI at next turn (This is wanted).
+		if(win_checker(i, heightCounter[i]-1, second_player, 2))
+		{		
+			chance[i] += 20;
+		}
+
+
+	}
+
 		
 	for(i=0;i<=6;i++){
+		
 		if ((chance[i] > greatest_chance) && (heightCounter[i]!=-1))
 		{
 			greatest_chance = chance[i];
@@ -130,7 +199,7 @@ function drop_ball(column_number){
 	
 
 	//Case: Win!
-	if (win_checker(column_number, heightCounter[column_number]+1, current_player) == true) 
+	if (win_checker(column_number, heightCounter[column_number]+1, current_player, 4)) 
 	{
 		game_over=true;
 	
@@ -192,7 +261,7 @@ function animate_fall(column_number, goal_height, current_height, ball_color, ba
 		if(game_type=="Human"){
 			hasBallDropped = true;
 		}
-		else if((game_type=="AI")&&(ball_color==second_move)){
+		else if((game_type=="AI")&&(ball_color==second_player)){
 			//In AI mode, make sure that the AI ball has landed first before letting the human player click.
 			hasBallDropped = true;
 		}
@@ -228,10 +297,10 @@ function get(column_number, row_number)
 function show_results(winning_player, draw_game){
 	
 	if(!draw_game){
-		if(winning_player == first_move){
+		if(winning_player == first_player){
 			winner = player1name;
 		}
-		else if(winning_player == second_move){
+		else if(winning_player == second_player){
 			winner = player2name;
 		}
 
@@ -254,7 +323,7 @@ function show_results(winning_player, draw_game){
 
 
 
-function win_checker(x, y, ball_color)
+function win_checker(x, y, ball_color, sequence_goal)
 {
 	var inner_ctr, outer_ctr;
 	var sum1,sum2,sum3,sum4;
@@ -264,6 +333,12 @@ function win_checker(x, y, ball_color)
 
 
 	ball_color2 = -ball_color;
+
+	var heuristic_check = false;
+	if(sequence_goal != 4){
+		heuristic_check = true;
+	}
+
 
 
 	/*Check the whole board for cases:
@@ -309,36 +384,44 @@ function win_checker(x, y, ball_color)
 		}
 
 
-		if ((sum1 >= 4) && (youShallNotPass1 == 0)) 
+		if ((sum1 >= sequence_goal) && (youShallNotPass1 == 0)) 
 		{
 			type_of_impact = "horizontal";
-			lightTheBalls(x, y, outer_ctr, type_of_impact, ball_color);
+			if(!heuristic_check){
+				lightTheBalls(x, y, outer_ctr, type_of_impact, ball_color);
+			}
 
-			youreWinner = true
+			youreWinner = true;
 		} 
 
-		if ((sum2 >= 4) && (youShallNotPass2 == 0)) 
+		if ((sum2 >= sequence_goal) && (youShallNotPass2 == 0)) 
 		{
 			type_of_impact = "vertical";
-			lightTheBalls(x, y, outer_ctr, type_of_impact, ball_color);
+			if(!heuristic_check){
+				lightTheBalls(x, y, outer_ctr, type_of_impact, ball_color);
+			}
 
-			youreWinner = true
+			youreWinner = true;
 		}
 
-		if ((sum3 >= 4) && (youShallNotPass3 == 0)) 
+		if ((sum3 >= sequence_goal) && (youShallNotPass3 == 0)) 
 		{
 			type_of_impact = "diagonal-left-to-right";//L to R, from top
-			lightTheBalls(x, y, outer_ctr, type_of_impact, ball_color);
+			if(!heuristic_check){
+				lightTheBalls(x, y, outer_ctr, type_of_impact, ball_color);
+			}
 
-			youreWinner = true
+			youreWinner = true;
 		} 
 
-		if ((sum4 >= 4) && (youShallNotPass4 == 0)) 
+		if ((sum4 >= sequence_goal) && (youShallNotPass4 == 0)) 
 		{
 			type_of_impact = "diagonal-right-to-left";//R to L, from top
-			lightTheBalls(x, y, outer_ctr, type_of_impact, ball_color);
+			if(!heuristic_check){
+				lightTheBalls(x, y, outer_ctr, type_of_impact, ball_color);
+			}
 
-			youreWinner = true
+			youreWinner = true;
 		};
 
 	}
