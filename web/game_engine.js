@@ -91,6 +91,8 @@ function changeTurn(){
 
 function best_column_heuristic(){
 		
+	var debug = false;
+
 	chance = new Array(0,0,0,0,0,0,0);
 	chance[0] = Math.random();
 	chance[1] = Math.random();
@@ -109,30 +111,34 @@ function best_column_heuristic(){
 
 		//CASE 1:
 		//Connect-4 for AI (Winning column for AI).
-		if(win_checker(i, heightCounter[i], second_player, 3))
+		if(win_checker(i, heightCounter[i], second_player, 3).hasWon)
 		{		
 			chance[i] += 500;
+			if(debug)alert("<" + i + ">   case 1   (chance:" + Math.round(chance[i]*100)/100 + ")");
 		}
 	
 		//CASE 2:
 		//Connect-4 for Human (Prevent an immediate human win).
-		if(win_checker(i, heightCounter[i], first_player, 3))
+		if(win_checker(i, heightCounter[i], first_player, 3).hasWon)
 		{		
-			chance[i] += 250;
+			chance[i] += 400;
+			if(debug)alert("<" + i + ">   case 2   (chance:" + Math.round(chance[i]*100)/100 + ")");
 		}
 
 		//CASE 3:
-		//Connect-4 for Human at next turn (Human can win next turn if AI chooses this column -- prevent it).
-		if(win_checker(i, heightCounter[i]-1, first_player, 3))
+		//Connect-4 for Human at next turn (Human can win next turn if AI chooses this same column -- so don't choose it).
+		if(win_checker(i, heightCounter[i]-1, first_player, 3).hasWon)
 		{		
-			chance[i] -= 150;
+			chance[i] -= 300;
+			if(debug)alert("<" + i + ">   case 3   (chance:" + Math.round(chance[i]*100)/100 + ")");
 		}
 
 		//CASE 4:
 		//Connect-4 for AI at next turn (Human can prevent it right away so avoid it as much as possible).
-		if(win_checker(i, heightCounter[i]-1, second_player, 3))
+		if(win_checker(i, heightCounter[i]-1, second_player, 3).hasWon)
 		{		
 			chance[i] -= 50;
+			if(debug)alert("<" + i + ">   case 4   (chance:" + Math.round(chance[i]*100)/100 + ")");
 		}
 
 
@@ -141,30 +147,58 @@ function best_column_heuristic(){
 
 		//CASE 5:
 		//Connect-3/4 for AI (This is wanted).
-		if(win_checker(i, heightCounter[i], second_player, 2))
+		if(win_checker(i, heightCounter[i], second_player, 2).hasWon)
 		{		
-			chance[i] += 50;
+			//Add the number of connections that can be made to the chance.
+			chance[i] += 200 + (((win_checker(i, heightCounter[i], second_player, 2).number_of_connect_fours)-1)*5);
+			if(debug)alert("<" + i + ">   case 5   (chance:" + Math.round(chance[i]*100)/100 + ")");
 		}
 
 		//CASE 6:
-		//Connect-3/4 for human (Avoid a human 3/4-ball-sequence).
-		if(win_checker(i, heightCounter[i], first_player, 2))
+		//Connect-3/4 for human (Prevent a human 3/4-ball-sequence).
+		if(win_checker(i, heightCounter[i], first_player, 2).hasWon)
 		{		
-			chance[i] += 60;
+			//Add the number of connections that can be prevented to the chance.
+			chance[i] += 150 + (((win_checker(i, heightCounter[i], first_player, 2).number_of_connect_fours)-1)*5);
+			if(debug)alert("<" + i + ">   case 6   (chance:" + Math.round(chance[i]*100)/100 + ")");
 		}
 
 		//CASE 7:
-		//Connect-3/4 for human at next turn (Should be stopped).
-		if(win_checker(i, heightCounter[i]-1, first_player, 2))
+		//Connect-3/4 for human at next turn (Should not be chosen as much as possible).
+		if(win_checker(i, heightCounter[i]-1, first_player, 2).hasWon)
 		{		
-			chance[i] += 20;
+			chance[i] -= 30;
+			if(debug)alert("<" + i + ">   case 7   (chance:" + Math.round(chance[i]*100)/100 + ")");
 		}
 
 		//CASE 8:
 		//Connect-3/4 for AI at next turn (This is wanted).
-		if(win_checker(i, heightCounter[i]-1, second_player, 2))
+		if(win_checker(i, heightCounter[i]-1, second_player, 2).hasWon)
 		{		
-			chance[i] += 20;
+			chance[i] += 30;
+			if(debug)alert("<" + i + ">   case 8   (chance:" + Math.round(chance[i]*100)/100 + ")");
+		}
+
+
+
+		//CASES 9-10: Connect-2/4 Cases
+
+		//CASE 9:
+		//Connect-2/4 for AI (This is wanted).
+		if(win_checker(i, heightCounter[i], second_player, 1).hasWon)
+		{		
+			//Add the number of connections that can be made to the chance.
+			chance[i] += 10 + (((win_checker(i, heightCounter[i], second_player, 1).number_of_connect_fours)-1)*5);
+			if(debug)alert("<" + i + ">   case 9   (chance:" + Math.round(chance[i]*100)/100 + ")");
+		}
+
+		//CASE 10:
+		//Connect-2/4 for human (Prevent a human 2/4-ball-sequence).
+		if(win_checker(i, heightCounter[i], first_player, 1).hasWon)
+		{		
+			//Add the number of connections that can be prevented to the chance.
+			chance[i] += 10 + (((win_checker(i, heightCounter[i], first_player, 1).number_of_connect_fours)-1)*5);
+			if(debug)alert("<" + i + ">   case 10   (chance:" + Math.round(chance[i]*100)/100 + ")");
 		}
 
 
@@ -199,7 +233,7 @@ function drop_ball(column_number){
 	
 
 	//Case: Win!
-	if (win_checker(column_number, heightCounter[column_number]+1, current_player, 4)) 
+	if (win_checker(column_number, heightCounter[column_number]+1, current_player, 4).hasWon) 
 	{
 		game_over=true;
 	
@@ -323,17 +357,19 @@ function show_results(winning_player, draw_game){
 
 
 
-function win_checker(x, y, ball_color, sequence_goal)
+function win_checker(x, y, ball_color, sequence_goal, heuristic_check)
 {
 	var inner_ctr, outer_ctr;
 	var sum1,sum2,sum3,sum4;
 	var youShallNotPass1,youShallNotPass2,youShallNotPass3,youShallNotPass4;
 	var ball_color2;
 	var youreWinner=false;
+	var connect_four_ctr = 0;
 
 
 	ball_color2 = -ball_color;
 
+	
 	var heuristic_check = false;
 	if(sequence_goal != 4){
 		heuristic_check = true;
@@ -392,6 +428,7 @@ function win_checker(x, y, ball_color, sequence_goal)
 			}
 
 			youreWinner = true;
+			connect_four_ctr++;
 		} 
 
 		if ((sum2 >= sequence_goal) && (youShallNotPass2 == 0)) 
@@ -402,6 +439,7 @@ function win_checker(x, y, ball_color, sequence_goal)
 			}
 
 			youreWinner = true;
+			connect_four_ctr++;
 		}
 
 		if ((sum3 >= sequence_goal) && (youShallNotPass3 == 0)) 
@@ -412,6 +450,7 @@ function win_checker(x, y, ball_color, sequence_goal)
 			}
 
 			youreWinner = true;
+			connect_four_ctr++;
 		} 
 
 		if ((sum4 >= sequence_goal) && (youShallNotPass4 == 0)) 
@@ -422,10 +461,14 @@ function win_checker(x, y, ball_color, sequence_goal)
 			}
 
 			youreWinner = true;
+			connect_four_ctr++;
 		};
 
 	}
-	return youreWinner;
+	return {
+		hasWon: youreWinner,
+		number_of_connect_fours: connect_four_ctr 
+	};
 }
 
 

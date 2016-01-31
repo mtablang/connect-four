@@ -14,7 +14,7 @@
 function changeName(opponent_type){
 	if(opponent_type=="AI"){
 		document.getElementById('opponent_type').innerHTML = "AI's Name:";
-		document.getElementById('opponent_name').value = "BLACK AI";
+		document.getElementById('opponent_name').value = "~EVIL~ AI";
 	}
 	else{
 		document.getElementById('opponent_type').innerHTML = "Player 2's Name:";
